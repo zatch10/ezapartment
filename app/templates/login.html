@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#log-in-btn').click(function (e) {
+        e.preventDefault();
+        username_ = document.getElementById('username').value; 
+        password_ = document.getElementById('userpass').value; 
+        console.log("reached");
+        $.post('/login', {'username' : username_, 'password' : password_}, function(data) {
+            console.log($( ".result" ).html( data ));
+        }).fail(function(xhr) {
+            window.location = "http://127.0.0.1:5000/Error"
+        });
+    });
+
+    $('#new-account-btn').click(function (e) {
+        e.preventDefault();
+        username_ = document.getElementById('username').value; 
+        password_ = document.getElementById('userpass').value; 
+        console.log("reached");
+        $.post('/createuser', {'username' : username_, 'password' : password_}, function(xhr) {
+            window.location = "http://127.0.0.1:5000/homepage"       
+        }).fail(function(xhr) {
+            window.location = "http://127.0.0.1:5000/Error"
+        });
+    });    
+});
+
+</script>
+</head>
+    
+
+<body>
+
+<div class="row">
+    <form id="form_login">
+        <p>Log in or create an account.</p>
+        <div class="form-group form-space">
+        <input id="username" name="username" type="text" placeholder="Username">
+        </div>
+        <div class="form-group form-space">
+        <input id="userpass" name="password" type="password" placeholder="Password">
+        </div>
+        <div class="form-group form-more-space">
+        <button id="log-in-btn" type="submit" class="btn btn-default">Login</button>
+        <button id="new-account-btn" type="submit" class="btn btn-default">Create Account</button>
+        </div>
+    </form>
+</div>
+
+
+
+</body>
+</html>
