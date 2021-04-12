@@ -9,6 +9,7 @@ $(document).ready(function () {
         text = document.getElementById('create_box').value;  
         $.post('/apartment_create', {'text' : text}, function(data) {
             console.log(data);
+            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
     });
 });
@@ -19,17 +20,21 @@ $(document).ready(function () {
         text = document.getElementById('read_box').value;  
         $.post('/apartment_read', {'text' : text}, function(data) {
             console.log(data);
+            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
     });
 });
 
 
 $(document).ready(function () {
-    $('#create-btn').click(function (e) {
+    $('#update-btn').click(function (e) {
         e.preventDefault();
-        text = document.getElementById('create_box').value;  
-        $.post('/apartment_create', {'text' : text}, function(data) {
+        field = document.getElementById('field_box').value;  
+        update = document.getElementById('update_box').value;  
+        address = document.getElementById('address_box').value;  
+        $.post('/apartment_update', {'field' : field, 'update' : update, 'address' : address}, function(data) {
             console.log(data);
+            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
     });
 });
@@ -37,14 +42,26 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
-    $('#create-btn').click(function (e) {
+    $('#delete-btn').click(function (e) {
         e.preventDefault();
-        text = document.getElementById('create_box').value;  
-        $.post('/apartment_create', {'text' : text}, function(data) {
+        text = document.getElementById('delete_box').value;  
+        $.post('/apartment_delete', {'text' : text}, function(data) {
             console.log(data);
+            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
     });
 });
+
+$(document).ready(function () {
+    $('#adv-btn').click(function (e) {
+        e.preventDefault(); 
+        $.post('/apartment_adv', function(data) {
+            console.log(data);
+            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
+        });
+    });
+});
+
 </script>
 </head>
 
@@ -57,17 +74,22 @@ $(document).ready(function () {
 <div>
   <p>Create:</p><br>
   <input type="text" id="create_box"><br>
-  <button id="create-btn" type="submit">Login</button><br>
+  <button id="create-btn" type="submit">Insert</button><br>
   <p>Read:</p><br>
   <input type="text" id="read_box"><br>
-  <button id="read-btn" type="submit">Login</button><br>
+  <button id="read-btn" type="submit">Search</button><br>
   <p>Update:</p><br>
+  <input type="text" id="field_box"><br>
   <input type="text" id="update_box"><br>
-  <button id="update-btn" type="submit">Login</button><br>
+  <input type="text" id="address_box"><br>
+  <button id="update-btn" type="submit">Update</button><br>
   <p>Delete:</p><br>
   <input type="text" id="delete_box"><br>
-  <button id="delete-btn" type="submit">Login</button><br>
+  <button id="delete-btn" type="submit">Delete</button><br>
 </div> 
-
+<br>
+<button id="adv-btn" type="submit">Run advanced Query</button><br>
+<br>
+<pre id = "output"></pre>
 </body>
 </html>
