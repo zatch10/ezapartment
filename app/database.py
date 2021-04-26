@@ -177,6 +177,10 @@ def updateApartment(field, update, address):
     cur = db.connect()
     try:
         for i in range(len(field)):
+            if field[i] == "Rent" or field[i] == "Stories" or field[i] == "Units":
+                query = f"UPDATE Apartments SET {field[i]} = {update[i]} WHERE Address = '{address}'"
+                results = cur.execute(query)
+                continue
             query = f"UPDATE Apartments SET {field[i]} = '{update[i]}' WHERE Address = '{address}'"
             results = cur.execute(query)
         return True

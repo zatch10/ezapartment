@@ -39,6 +39,9 @@ def apartment_update():
     address = request.form['address']
     field = field.split(",")
     update = update.split(",")
+    if len(field) != len(update):
+        result = {'success': 1}
+        return jsonify(result)
     if(db_helper.updateApartment(field, update, address)):
         result = {'success': 1}
     else:
