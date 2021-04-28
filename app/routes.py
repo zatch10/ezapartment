@@ -1,5 +1,5 @@
 """ Specifies routing for the application"""
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, url_for
 from app import app
 from app import database as db_helper
 import flask
@@ -67,26 +67,28 @@ def apartment_adv():
 
 
 
-@app.route("/createuser", methods=['POST'])
+@app.route("/create", methods=['POST'])
 def create():
     """ recieves post requests to add new task """
-    print("entering the create function")
     username = request.form['username']
     password = request.form['password']
-    if db_helper.createUser(username, password): 
-        return render_template("homepage.html")
-    return render_template("Error.html")
+    if db_helper.createUser(username, password):
+        result = {'success':1}
+    else:
+        result = {'success':0}
+    return jsonify(result)
 
 
 @app.route("/login", methods=['POST'])
 def login():
     username = request.form['username']
     password = request.form['password']
-    if db_helper.fetchUser(username) != None:
-        if(db_helper.validateUser(username, password)):
-            return flask.redirect("/homepage")
-
-    return flask.redirect("/Error")
+    if db_helper.validateUser(username, password):
+        result = {'success':1}
+    else:
+        result = {'success':0}
+    print("reached")
+    return jsonify(result)
 
 
 @app.route("/Error")
@@ -105,4 +107,4 @@ def homepage():
 def start():
     """ returns rendered homepage """
     # items = db_helper.fetch_todo()
-    return render_template("apartment.html")
+    return render_template("login.html")
