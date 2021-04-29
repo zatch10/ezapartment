@@ -116,3 +116,36 @@ def advQuery():
     for row in results:
         ans.append(row)
     return ans
+
+
+def search(map):
+    cur = db.connect()
+    query = f"""Select A.Address
+FROM Apartments A NATURAL JOIN Amenities Amb NATURAL JOIN Included_Utilities NATURAL JOIN SecurityIndex
+WHERE {map} ORDER BY idx DESC"""
+    results = cur.execute(query)
+
+    arr = []
+    for row in results:
+        temp = row[0]
+        temp.replace(",","")
+        arr.append(temp)
+        
+    if len(arr) < 1:
+        return False    
+    return arr
+
+def checkStreet(Street):
+    cur = db.connect()
+    query = f"SELECT Street FROM SecurityIndex WHERE Street LIKE '%%{Street}%%'"
+    results = cur.execute(query)
+
+    arr = []
+    for row in results:
+        temp = row[0]
+        temp.replace(",","")
+        arr.append(temp)
+    
+    if len(arr) < 1:
+        return False    
+    return arr

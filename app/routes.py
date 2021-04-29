@@ -3,6 +3,7 @@ from flask import render_template, request, jsonify, redirect, url_for
 from app import app
 from app import database as db_helper
 import flask
+import copy
 
 @app.route("/apartment_create", methods=['POST'])
 def apartment_create():
@@ -90,6 +91,42 @@ def login():
     print("reached")
     return jsonify(result)
 
+@app.route("/search", methods=['POST'])
+def search():
+    map = dict(request.form)
+    temp = copy.deepcopy(map)    
+    for Key in map:
+        if Key == "min" and map[Key] == '':
+            temp[Key] = 300
+            map[Key] = 300
+        if Key == "max" and map[Key] == '':
+            temp[Key] = 2000
+            map[Key] = 2000
+        if map[Key] == '' or map[Key] == '0':
+            temp.pop(Key)
+        elif Key == 'Street':
+            check = db_helper.checkStreet(map[Key])
+            if check != False:
+                temp[Key] = check[0]
+                    # tmp = str()
+                    # tmp += 
+                    # for i in range(len(check)):
+                    #     tmp += i
+                    #     tmp += "OR"   
+        # elif Key == "min" or Key == "max":
+
+    test = str()
+    check = 1
+    for Key in temp:
+        if (Key == "min" or Key == "max") and check:
+            test += f"Rent >= {temp['min']} AND Rent <= {temp['max']} AND "
+            check = 0
+        elif Key != "min" and Key != "max":
+            test += f"{Key} = '{temp[Key]}' AND "
+    test = test[:-4]
+    ans = db_helper.search(test)
+    result = {'search' : ans} 
+    return jsonify(result)
 
 @app.route("/Error")
 def error_page():
@@ -107,4 +144,4 @@ def homepage():
 def start():
     """ returns rendered homepage """
     # items = db_helper.fetch_todo()
-    return render_template("login.html")
+    return render_template("logist.html")
