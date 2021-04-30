@@ -5,6 +5,7 @@
 
 $(document).ready(function () {
   $("#map").hide();
+  $("#floating-panel").hide();
   function GFG_FUN(list) {
       var cols = [];
       console.log(list)
@@ -53,6 +54,8 @@ $(document).ready(function () {
       el.appendChild(table);
   }
     $('#searchQuerySubmit').click(function (e) {
+        $("#map").hide();
+        $("floating-panel").hide();
         e.preventDefault();
         arr1 = [];
         street = document.getElementById('searchQueryInput').value;  
@@ -75,6 +78,7 @@ $(document).ready(function () {
                 arr1.push(data.search[i].Address);
               }
               $("#map").show();
+              $("#floating-panel").show();
               initMap(arr1)
             }
             else
@@ -85,6 +89,7 @@ $(document).ready(function () {
     $('#reco').click(function (e) {
         e.preventDefault();
         $("#map").hide();
+        $("#floating-panel").hide();
         rent = document.getElementById('Rent').checked ? 0 : 1;
         $.post('/recommend', {"val" : rent}, function(data) {
           console.log(data);
@@ -94,11 +99,20 @@ $(document).ready(function () {
             temp.push(data.success[i].Address);
           }
           $("#map").show();
+          $("#floating-panel").show();
           initMap(temp);
         });
 
     });
 
+    $('#submit_address').click(function (e) {
+      var t_arr = [];
+      rent = document.getElementById('address_search').value;
+      $("#map").show();
+      $("#floating-panel").show();
+      t_arr.push(rent);
+      initMap(t_arr);
+    });
 
 });
   function initMap(Address) {
@@ -114,9 +128,6 @@ $(document).ready(function () {
     //console.log(arr);
     var arr = arr2;
     for(var i = 0; i < arr.length; i++) {
-      if(i == 2) {
-        break;
-      }
       var test = arr[i];
       geocoder.geocode({ address: arr[i] }, (results, status) => {
         if (status === "OK") {
@@ -139,6 +150,7 @@ $(document).ready(function () {
           );
         }
       });
+      break;
     }
   }
 
@@ -203,7 +215,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfd8dc', end
 .navbar {
   overflow: hidden;
   background-color: #333;
-  width:38%;
+  width:28.8%;
   margin: 2rem auto;
 }
 
@@ -261,6 +273,7 @@ p {
 .dropdown-content a:hover {
   background-color: #ddd;
 }
+
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -425,7 +438,10 @@ h1{
   </div>
   </div>
   <br><br>
-  
+  <div id="floating-panel">
+    <input id="address_search" type="textbox">
+    <input id="submit_address" type="button" value="Search" />
+  </div>
   <div id="map"></div>
 
   <br><br>
