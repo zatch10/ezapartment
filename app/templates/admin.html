@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#Home').click(function (e) {
+        e.preventDefault(); 
+        window.location.href = '/homepage';
+    });
+    $('#Apartments').click(function (e) {
+        e.preventDefault(); 
+        window.location.href = '/apartment';
+    });
+    $('#Amenities').click(function (e) {
+        e.preventDefault(); 
+        window.location.href = '/amenities';
+    });
+    $('#Utilities').click(function (e) {
+        e.preventDefault(); 
+        window.location.href = '/included_utilities';
+    });
+    $('#Security').click(function (e) {
+        e.preventDefault(); 
+        window.location.href = '/Security_Index';
+    });
+});
+
+</script>
+</head>
+<style>
+.btn-group button {
+  background-color: #04AA6D; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+</style>
+
+
+<body>
+
+<h1>ADMIN</h1>
+
+<div class="btn-group" style="width:100%">
+    <button id="Home" style="width:20%">Home</button>
+    <button id="Apartments" style="width:20%">Apartments</button>
+    <button id="Amenities" style="width:20%">Amenities</button>
+    <button id="Utilities" style="width:20%">Included Utilities</button>
+    <button id="Security" style="width:20%">Security Index</button>
+</div>
+
+</body>
+</html>

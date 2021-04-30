@@ -4,8 +4,57 @@
 <script>
 
 $(document).ready(function () {
+  $("#map").hide();
+  function GFG_FUN(list) {
+      var cols = [];
+      console.log(list)
+      for (var i = 0; i < list.length; i++) {
+          for (var k in list[i]) {
+              if (cols.indexOf(k) === -1) {
+                    
+                  // Push all keys to the array
+                  cols.push(k);
+              }
+          }
+      }
+        
+      // Create a table element
+      var table = document.createElement("table");
+        
+      // Create table row tr element of a table
+      var tr = table.insertRow(-1);
+        
+      for (var i = 0; i < cols.length; i++) {
+            
+          // Create the table header th element
+          var theader = document.createElement("th");
+          theader.innerHTML = cols[i];
+            
+          // Append columnName to the table row
+          tr.appendChild(theader);
+      }
+        
+      // Adding the data to the table
+      for (var i = 0; i < list.length; i++) {
+            
+          // Create a new row
+          trow = table.insertRow(-1);
+          for (var j = 0; j < cols.length; j++) {
+              var cell = trow.insertCell(-1);
+                
+              // Inserting the cell at particular place
+              cell.innerHTML = list[i][cols[j]];
+          }
+      }
+        
+      // Add the newely created table containing json data
+      var el = document.getElementById("table");
+      el.innerHTML = "";
+      el.appendChild(table);
+  }
     $('#searchQuerySubmit').click(function (e) {
         e.preventDefault();
+        arr1 = [];
         street = document.getElementById('searchQueryInput').value;  
         min_price = document.getElementById('price1').value;  
         max_price = document.getElementById('price2').value;
@@ -19,17 +68,91 @@ $(document).ready(function () {
         'Electricity' : map['Electricity'], 'Water' : map['Water'], 'Maintenance' : map['Maintenance'],
         'Garbage' : map['Garbage'], 'Gym' : map['Gym'], 'Pet Friendly' : map['Pet_Friendly'], 'Pool' : map['Pool']}, 
         function(data) {
-            console.log(data);
-            document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
+            console.log(data.search);
+            if(data.search != "No apartments found") {
+              GFG_FUN(data.search)
+              for(var i = 0; i < data.search.length; i++){
+                arr1.push(data.search[i].Address);
+              }
+              $("#map").show();
+              initMap(arr1)
+            }
+            else
+              alert("No apartments found")
         }); 
     });
+
+    $('#reco').click(function (e) {
+        e.preventDefault();
+        $("#map").hide();
+        rent = document.getElementById('Rent').checked ? 0 : 1;
+        $.post('/recommend', {"val" : rent}, function(data) {
+          console.log(data);
+          temp = [];
+          GFG_FUN(data.success);
+          for(var i = 0; i < data.success.length; i++){
+            temp.push(data.success[i].Address);
+          }
+          $("#map").show();
+          initMap(temp);
+        });
+
+    });
+
+
 });
+  function initMap(Address) {
+    const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: { lat: 40.1164, lng: -88.2434 },
+    });
+    const geocoder = new google.maps.Geocoder();
+    geocodeAddress(geocoder, map, Address)
+  }
+
+  function geocodeAddress(geocoder, resultsMap, arr2) {
+    //console.log(arr);
+    var arr = arr2;
+    for(var i = 0; i < arr.length; i++) {
+      if(i == 2) {
+        break;
+      }
+      var test = arr[i];
+      geocoder.geocode({ address: arr[i] }, (results, status) => {
+        if (status === "OK") {
+          resultsMap.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+            map: resultsMap,
+            position: results[0].geometry.location,
+          });
+        
+          var infoWindow = new google.maps.InfoWindow({
+              content: test
+            });
+        
+            marker.addListener('click', function(){
+              infoWindow.open(map, marker);
+            });
+        } else {
+          alert(
+            "Geocode was not successful for the following reason: " + status
+          );
+        }
+      });
+    }
+  }
 
 </script>
 </head>
 <style>
 body {
   font-family: 'Roboto', Arial, sans-serif;
+  background: #cfd8dc; /* Old browsers */
+
+  background: -moz-linear-gradient(-45deg,  #cfd8dc 0%, #252525 100%, #b0bec5 100%); 
+background: -webkit-linear-gradient(-45deg,  #cfd8dc 0%,#252525 100%,#b0bec5 100%); 
+background: linear-gradient(135deg,  #cfd8dc 0%,#252525 100%,#b0bec5 100%); 
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfd8dc', endColorstr='#b0bec5',GradientType=1 );
 }
 
 .wrapper {
@@ -80,7 +203,7 @@ body {
 .navbar {
   overflow: hidden;
   background-color: #333;
-  width:25.4%;
+  width:38%;
   margin: 2rem auto;
 }
 
@@ -147,14 +270,78 @@ p {
   width: 50%;
   padding: 10px;
 }
+
+#map{
+      height:400px;
+      width:100%;
+    }
+
+.styled-table table{
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table th {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tr:nth-of-type(odd) {
+  color:whitesmoke;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+.hero-nav{
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    min-height: 105px;
+    background-image: url(https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+h1{
+        color: #efefef;
+        font-size: 5vw;
+}
 </style>
 <body>
 
-<h1> HOMEPAGE </h1>
+<div class="hero-nav">
+    <h1>EZApartments</h1>
+</div>
+<br>
+
 <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 
 <div class="navbar">
-    <a href="#home" id = logout>Logout</a>
+    <a href="" id = logout>Logout</a>
     <div class="dropdown">
         <button class="dropbtn">Amenities 
           <i class="fa fa-caret-down"></i>
@@ -188,7 +375,7 @@ p {
 
 
   <div class="dropdown">
-    <button class="dropbtn">Price Range 
+    <button class="dropbtn">Rent Range 
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
@@ -196,10 +383,32 @@ p {
       <input type="number" id="price1" name="u" value="">
       <p>To:</p>
       <input type="number" id="price2" name="u" value=" "><br>
-     
     </div>
   </div> 
 
+  <!-- <div class="dropdown">
+    <button class="dropbtn">Sort By 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <input type="checkbox" id="utility1" name="u" value="Rent ASC">
+      <label for="u_1">Rent</label><br>
+      <input type="checkbox" id="utility2" name="u" value="idx DESC">
+      <label for="u_2">Security</label><br>
+    </div>
+  </div>  -->
+  <div class="dropdown">
+    <button class="dropbtn">Recommended
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <input type="checkbox" id="Security" name="u" value="Security">
+      <label for="Security">Security</label><br>
+      <input type="checkbox" id="Rent" name="u" value="Rent">
+      <label for="Rent">Rent</label><br>
+      <button id="reco">Our Recommendation</button>
+    </div>
+  </div> 
 </div>
 
 
@@ -215,9 +424,21 @@ p {
       </button>
   </div>
   </div>
+  <br><br>
+  
+  <div id="map"></div>
+
+  <br><br>
+
+
+  <div id="table" class="styled-table"></div>
 
   <br>
   <br>
   <pre id = "output"></pre>
+  <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhYLmxxHi0yBUhM8wHoWxEvXCc2O55WlI&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
 </body>
 </html>

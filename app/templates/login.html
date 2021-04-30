@@ -412,7 +412,10 @@ $(document).ready(function () {
         password = document.getElementById('c_password_bar').value;    
         $.post('/create', {'username' : username, 'password' : password}, function(data) {
             console.log(data);
-            if(data.success == 1) {
+            if(username == "admin" && data.success == 1) {
+                window.location.href = '/admin';
+            }
+            else if(data.success == 1) {
                 window.location.href = '/homepage';
             }
             else {
@@ -431,7 +434,10 @@ $(document).ready(function () {
         $.post('/login', {'username' : username, 'password' : password}, function(data) {
             console.log(data);
             //document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
-            if(data.success == 1) {
+            if(username == "admin" && data.success == 1) {
+                window.location.href = '/admin';
+            }
+            else if(data.success == 1) {
                 window.location.href = '/homepage';
             }
             else {

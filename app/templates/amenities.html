@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#create-btn').click(function (e) {
         e.preventDefault();
         text = document.getElementById('create_box').value;  
-        $.post('/apartment_create', {'text' : text}, function(data) {
+        $.post('/amenities_create', {'text' : text}, function(data) {
             console.log(data);
             document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
@@ -18,7 +18,7 @@ $(document).ready(function () {
     $('#read-btn').click(function (e) {
         e.preventDefault();
         text = document.getElementById('read_box').value;  
-        $.post('/apartment_read', {'text' : text}, function(data) {
+        $.post('/amenities_read', {'text' : text}, function(data) {
             console.log(data);
             document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
@@ -31,8 +31,8 @@ $(document).ready(function () {
         e.preventDefault();
         field = document.getElementById('field_box').value;  
         update = document.getElementById('update_box').value;  
-        address = document.getElementById('address_box').value;  
-        $.post('/apartment_update', {'field' : field, 'update' : update, 'address' : address}, function(data) {
+        company = document.getElementById('company_box').value;  
+        $.post('/amenities_update', {'field' : field, 'update' : update, 'company' : company}, function(data) {
             console.log(data);
             document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
@@ -45,7 +45,7 @@ $(document).ready(function () {
     $('#delete-btn').click(function (e) {
         e.preventDefault();
         text = document.getElementById('delete_box').value;  
-        $.post('/apartment_delete', {'text' : text}, function(data) {
+        $.post('/amenities_delete', {'text' : text}, function(data) {
             console.log(data);
             document.getElementById("output").textContent = JSON.stringify(data, undefined, 2);
         });
@@ -69,29 +69,26 @@ $(document).ready(function () {
 
 <body>
 
-<h1>Apartment</h1>
+<h1>Amenities</h1>
 
 <div>
   <p>Create:</p><br>
   <input type="text" id="create_box"><br>
-  <button id="create-btn" type="submit">Insert</button><br>
+  <button id="create-btn" type="submit">Create Entry</button><br>
   <p>Read:</p><br>
   <input type="text" id="read_box"><br>
-  <button id="read-btn" type="submit">Search</button><br>
+  <button id="read-btn" type="submit">Search Company</button><br>
   <p>Update:</p><br>
-  <p>Enter Fields to be updated:</p>
   <input type="text" id="field_box"><br>
-  <p>Enter Values:</p>
   <input type="text" id="update_box"><br>
-  <p>Enter Address:</p>
-  <input type="text" id="address_box"><br>
+  <input type="text" id="company_box"><br>
   <button id="update-btn" type="submit">Update</button><br>
   <p>Delete:</p><br>
   <input type="text" id="delete_box"><br>
-  <button id="delete-btn" type="submit">Delete</button><br>
+  <button id="delete-btn" type="submit">Delete Company</button><br>
 </div> 
 <!-- <br>
-<button id="adv-btn" type="submit">Good Apartments Below average Rent</button><br> -->
+<button id="adv-btn" type="submit">Best Deal on Apartments</button><br> -->
 <br>
 <pre id = "output"></pre>
 </body>
