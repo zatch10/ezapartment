@@ -152,7 +152,7 @@ def checkStreet(Street):
 
 def duplicate_Complex_Name(Complex_Name):
     cur = db.connect()
-    query = f" SELECT Complex_Name FROM included_utilities WHERE Complex_Name = '{Complex_Name}'"
+    query = f" SELECT Complex_Name FROM Included_Utilities WHERE Complex_Name = '{Complex_Name}'"
     results = cur.execute(query)
 
     arr = []
@@ -181,13 +181,13 @@ def insertUtilities(array):
             array[i] = "N/A"
     
         
-    query = f"INSERT INTO included_utilities(Complex_Name, Electricity, Garbage, Maintenance, Water) VALUES('{array[0]}', {array[1]}, {array[2]}, {array[3]}, {array[4]})"
+    query = f"INSERT INTO Included_Utilities(Complex_Name, Electricity, Garbage, Maintenance, Water) VALUES('{array[0]}', {array[1]}, {array[2]}, {array[3]}, {array[4]})"
     cur.execute(query)
     return True
 
 def searchComplex_Name(Complex_Name):
     cur = db.connect()
-    query = f"SELECT * FROM included_utilities WHERE Complex_Name = '{Complex_Name}'"
+    query = f"SELECT * FROM Included_Utilities WHERE Complex_Name = '{Complex_Name}'"
     results = cur.execute(query)
     ans = []
     for row in results:
@@ -200,7 +200,7 @@ def updateUtilities(field, update, Complex_Name):
     cur = db.connect()
     try:
         for i in range(len(field)):
-            query = f"UPDATE included_utilities SET {field[i]} = '{update[i]}' WHERE Complex_Name = '{Complex_Name}'"
+            query = f"UPDATE Included_Utilities SET {field[i]} = '{update[i]}' WHERE Complex_Name = '{Complex_Name}'"
             results = cur.execute(query)
         return True
     except Exception as e:
@@ -209,7 +209,7 @@ def updateUtilities(field, update, Complex_Name):
 
 def deleteComplex_Name(Complex_Name):
     cur = db.connect()
-    query = f"DELETE FROM included_utilities WHERE Complex_Name = '{Complex_Name}'"
+    query = f"DELETE FROM Included_Utilities WHERE Complex_Name = '{Complex_Name}'"
     try:
         cur.execute(query)
     except:
